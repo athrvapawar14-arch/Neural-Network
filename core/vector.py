@@ -41,6 +41,16 @@ class Vector:
             self._arr = np.array(args, dtype=float)
 
     # --- Properties ---
+
+    @property
+    def shape(self):
+        return self._arr.shape
+
+    @property
+    def data(self):
+        """Read-only access to the underlying numpy array."""
+        return self._arr
+
     @property
     def magnitude(self):
         """Calculates vector magnitude (length)."""
@@ -109,3 +119,5 @@ class Vector:
         if isinstance(other, Vector):
             return np.array_equal(self._arr, other._arr)
         return False    
+
+
