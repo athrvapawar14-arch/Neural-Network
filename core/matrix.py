@@ -121,18 +121,24 @@ class Matrix:
             
 
     def __add__(self, other):
-        if isinstance(other, Matrix) and self.shape == other.shape:
+        if isinstance(other, Matrix):
             return Matrix(self._data + other._data)
+        if isinstance(other, (int, float, np.number)):
+            return Matrix(self._data + other)
         return NotImplemented
 
     def __sub__(self, other):
-        if isinstance(other,Matrix) and self.shape == other.shape:
+        if isinstance(other,Matrix):
             return Matrix(self._data - other._data)
+        if isinstance(other, (int, float, np.number)):
+            return Matrix(self._data - other)
         return NotImplemented
 
     
     def __mul__(self, other):
         """Scalar multiplication: v * 3"""
+        if isinstance(other, Matrix):
+            return Matrix(self._data * other._data)
         if isinstance(other, (int, float, np.number)):
             return Matrix(self._data * other)
         return NotImplemented
@@ -149,3 +155,16 @@ class Matrix:
         # for vector multiplication.
         if isinstance(other, Vector) and self.shape[1] == len(other):
             return Vector(self._data @ other._arr)
+
+    def __truediv__(self, other):
+        if isinstance(other, Matrix):
+            return Matrix(self._data / other._data)
+        if isinstance(other, (int, float, np.number)):
+            return Matrix(self._data / other)
+        return NotImplemented
+
+    def max(self, axis=None, keepdims=True):
+        return Matrix(np.max(self._data, axis=axis, keepdims=keepdims))
+
+    def sum(self, axis=None, keepdims=True):
+        return Matrix(np.sum(self._data, axis=axis, keepdims=keepdims))

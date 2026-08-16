@@ -35,15 +35,18 @@ class Activation(ABC):
 
         raise NotImplementedError
 
+    def _sameClass (self, original, data):
+        return type(original)(data)
+
 
 class ReLU(Activation):
     def forward(self, x):
         result = np.maximum(0, x.data) # i took help online for this one. 
-        return type(x)(result) # this was my idea, i knew that type gives us the class name of the object. and i had to look up if we can use it to make the object. 
+        return self._sameClass(x, result) # this was my idea, i knew that type gives us the class name of the object. and i had to look up if we can use it to make the object. 
 
     def derivative(self, x):
         result = (x.data > 0).astype(float) 
-        return type(x)(result)
+        return self._sameClass(x, result)
 
 
 class Sigmoid(Activation):
@@ -54,7 +57,7 @@ class Sigmoid(Activation):
     def forward(self, x):
         # 1 / (1 + e^-x). i looked this up. as i did not know what the sigmoid function was.
         result = 1 / ( 1 + np.exp(-(x.data))) # i got the logic right. gotta say, numpy is a very useful library. especially with operator overloading. as my matrix and vectors are iterable.
-        self.cache = type(x)(result)
+        self.cache = self._sameClass(x, result)
         return self.cache
 
     def derivative(self, x):
@@ -88,16 +91,13 @@ class LeakyReLU(Activation):
     
     def forward(self, x):
         result = np.maximum((self.alpha * x.data ), x.data) 
-        return type(x)(result)
+        return self._sameClass(x, result)
 
     def derivative(self, x):
         result = np.where(x.data > 0, 1.0, self.alpha) # i made an elaborate for loop for this, it got crashed at run time. but it turns out there is a numpy function for this as well.. 
-        return type(x)(result)
+        return self._sameClass(x, result)
 
-    
-class Softmax(Activation):
-
-    pass
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # test
 
